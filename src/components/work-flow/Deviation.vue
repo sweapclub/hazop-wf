@@ -26,7 +26,7 @@
         <v-btn icon small>
           <v-icon>mdi-dots-horizontal</v-icon>
         </v-btn>
-        <v-btn icon small>
+        <v-btn icon small @click="addDeviate">
           <v-icon>mdi-plus</v-icon>
         </v-btn>
       </div>
@@ -35,30 +35,28 @@
 </template>
 
 <script>
-import ContainerBox from '../common/ContainerBox';
-import {Deviate} from '../../class/db';
-import {mapGetters, mapActions} from 'vuex';
+import ContainerBox from "../common/ContainerBox";
+import { Deviate } from "../../class/db";
+import { mapGetters, mapActions } from "vuex";
 export default {
-  props: ['indFlow', 'deviation'],
+  props: ["indFlow", "deviation"],
   components: {
-    'container-box': ContainerBox,
+    "container-box": ContainerBox,
   },
   data: () => ({}),
   mounted() {
     // this.getEqGroup(0);
   },
   methods: {
-    ...mapActions(['updateDeviate']),
+    ...mapActions(["updateDeviate", "addDeviate"]),
     onDeviateChange(e) {
-      console.log(e);
-      this.updateDeviate({indFlow: this.indFlow, deviateID: e});
-      // deviateID
+      this.updateDeviate({ indFlow: this.indFlow, deviateID: e });
     },
   },
   computed: {
-    ...mapGetters(['isSelectedEQ', 'getEqGroup']),
+    ...mapGetters(["isSelectedEQ", "getEqGroup"]),
     deviateInEqGroup() {
-      return Deviate.filter((f) => f.eqGroupID == this.getEqGroup(0));
+      return Deviate.filter((f) => f.eqGroupID == this.getEqGroup(this.indFlow));
     },
   },
 };

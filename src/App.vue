@@ -1,6 +1,6 @@
 <template>
   <v-app style="background-color:rgba(31, 31, 38, 0.5);">
-    <v-app-bar app color="primary" dark>
+    <v-app-bar app color="primary" dark dense>
       <div class="d-flex align-center">
         <div class="text-h6">Demo Workflow Hazop</div>
       </div>

@@ -25,9 +25,29 @@ export default new Vuex.Store({
           },
         ],
       },
+      // {
+      //   deviateID: null,
+      //   deviateDescription: null,
+      //   cause: [
+      //     {
+      //       causeNo: 1,
+      //       operationID: null,
+      //       specificCause: [],
+      //       consequence: [
+      //         [
+      //           {
+      //             eqGroupID: null,
+      //             consequenceDescription: '',
+      //           },
+      //         ],
+      //       ],
+      //     },
+      //   ],
+      // },
     ],
   },
   mutations: {
+
     // EQ
     updateEq(state, obj) {
       state.workFlow[obj.indFlow].cause[0].consequence[0][obj.indEq].eqGroupID =
@@ -47,7 +67,27 @@ export default new Vuex.Store({
     updateDeviate(state, obj) {
       state.workFlow[obj.indFlow].deviateID = obj.deviateID;
     },
-
+    addDeviate(state) {
+      state.workFlow.push({
+        deviateID: null,
+        deviateDescription: null,
+        cause: [
+          {
+            causeNo: 1,
+            operationID: null,
+            specificCause: [],
+            consequence: [
+              [
+                {
+                  eqGroupID: null,
+                  consequenceDescription: '',
+                },
+              ],
+            ],
+          },
+        ],
+      })
+    },
     // end deviate
 
     // cause
@@ -63,38 +103,67 @@ export default new Vuex.Store({
       state.workFlow[obj.indFlow].cause[obj.indCause].operationID =
         obj.operationID;
     },
-
+    addCause(state, indFlow) {
+      // a[0].cause[0].consequence[0].map( m => ({eqGroupID : m.eqGroupID}));
+      let duplicateConsequence = state.workFlow[indFlow].cause[0].consequence[0].map(m => ({ eqGroupID: m.eqGroupID }));
+      state.workFlow[indFlow].cause.push(
+        {
+          causeNo: state.workFlow[indFlow].cause.length + 1,
+          operationID: null,
+          specificCause: [],
+          consequence: [
+            duplicateConsequence
+          ],
+        }
+      )
+    },
     // end cause
+
+    // consequence
+
+    addConsequence(state, obj) {
+      let duplicateConsequence = state.workFlow[obj.indFlow].cause[0].consequence[0].map(m => ({ eqGroupID: m.eqGroupID }));
+      state.workFlow[obj.indFlow].cause[obj.indCause].consequence.push(duplicateConsequence);
+    }
+    // end consequnce
   },
 
   actions: {
-    // changeEQ({commit}, flowNo, causeNo, conNo, eqId) {
-    //   commit('changeEq', flowNo, causeNo, conNo, eqId);
-    // },
 
     // Equipment
-    addEq({commit}, indFlow) {
+    addEq({ commit }, indFlow) {
       commit('addEq', indFlow);
     },
-    updateEq({commit}, objEq) {
+    updateEq({ commit }, objEq) {
       commit('updateEq', objEq);
     },
 
     // End Equipment
 
     // Deviate
-    updateDeviate({commit}, objDva) {
+    updateDeviate({ commit }, objDva) {
       commit('updateDeviate', objDva);
+    },
+    addDeviate({ commit }) {
+      commit('addDeviate');
     },
     // end Deviate
 
     // Cause
-    addSpecificCause({commit}, objSpecific) {
+    addSpecificCause({ commit }, objSpecific) {
       commit('addSpecificCause', objSpecific);
     },
-    updateOperationID({commit}, objOperation) {
+    updateOperationID({ commit }, objOperation) {
       commit('updateOperationID', objOperation);
     },
+    addCause({ commit }, indFlow) {
+      commit('addCause', indFlow);
+    },
+
+    // consequence 
+    addConsequence({ commit }, objCon) {
+      commit('addConsequence', objCon)
+    }
   },
 
   getters: {
